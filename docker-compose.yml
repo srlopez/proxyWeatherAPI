@@ -1,0 +1,31 @@
+version: '3.1'
+services:
+  www:
+    image: node
+    environment:
+      # Por donde nginx (y no el docker-compose) expone su api
+      # localhost debería ser la IP pública de nginx
+      #- API=http://localhost:8000/api
+      # para poder acceder desde cualquier puesto.
+      - API=http://10.10.10.101:8000/api
+    volumes:
+      - ./AppWeb:/app
+    working_dir: /app
+    # Por defecto webserver corre en la 3000
+    # así que el proxy debe recoger 'servicio:puerta'=www:3000 y redirigirlo
+    # 
+    command: [ "node", "webserver.js" ]
+  netapi:
+    # https://stackoverflow.com/questions/48669548/why-does-aspnet-core-start-on-port-80-from-within-docker
+    # ASP.NET en contenedor se lanza en la 80
+    build: .
+    restart: always
+    image: appapi:1.0
+    environment:
+      - Aqui=POR AQUÍ LLUEVE
+  proxy:
+    image: nginx
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro

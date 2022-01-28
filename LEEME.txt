@@ -1,0 +1,26 @@
+# Comandos para crear una imagen en linux
+# de la webapi por defecto de Microsoft
+ver=5.0
+app=AppApi
+img=`echo ${app}:1.0 | tr '[:upper:]' '[:lower:]'`
+rm -rf ${app}
+docker rmi ${img}
+dotnet new webapi -n ${app}
+
+cd ${app}
+sed -i 's/"Freezing"/Environment.GetEnvironmentVariable("Aqui")/' Controllers/WeatherForecastController.cs
+dotnet publish -c Release
+tree bin/Release/net${ver}/publish
+cd ..
+
+cat <<EOF >Dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:${ver} AS runtime
+COPY ${app}/bin/Release/net${ver}/publish/ App/
+WORKDIR /App
+ENTRYPOINT ["dotnet", "${app}.dll"]
+EOF
+
+docker build -t ${img} .
+docker-compose up
+#docker run -d --rm -p 80:80 --name ${app} ${img}
+#xdg-open http://localhost/WeatherForecast
