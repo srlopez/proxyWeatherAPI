@@ -7,7 +7,8 @@ services:
       # localhost debería ser la IP pública de nginx
       #- API=http://localhost:8000/api
       # para poder acceder desde cualquier puesto.
-      - API=http://10.10.10.101:8000/api
+      - API=http://10.10.17.117:8000/api
+      # - API=http://localhost/WeatherForecast si publicado 80
     volumes:
       - ./AppWeb:/app
     working_dir: /app
