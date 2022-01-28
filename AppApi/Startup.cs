@@ -45,11 +45,13 @@ namespace AppApi
             }
 
             app.UseHttpsRedirection();
+
             app.UseCors(x => x
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           .SetIsOriginAllowed(origin => true)
-                           .AllowCredentials());
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials());
+
             app.UseRouting();
 
             app.UseAuthorization();

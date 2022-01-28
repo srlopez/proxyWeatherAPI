@@ -9,6 +9,14 @@ dotnet new webapi -n ${app}
 
 cd ${app}
 sed -i 's/"Freezing"/Environment.GetEnvironmentVariable("Aqui")/' Controllers/WeatherForecastController.cs
+# CORS en Startup.cs
+# app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
+
+# warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+#       Failed to determine the https port for redirect.
+# OJO! Intentar evitar este warning pude dar problemas
+#  "https_port": 443,  en appaettings.json soluciona en warnning pero no redirige el proxy
+
 dotnet publish -c Release
 tree bin/Release/net${ver}/publish
 cd ..
@@ -21,6 +29,8 @@ ENTRYPOINT ["dotnet", "${app}.dll"]
 EOF
 
 docker build -t ${img} .
+docker-compose build
+docker image rm $(docker image ls -f 'dangling=true' -q)
 docker-compose up
 #docker run -d --rm -p 80:80 --name ${app} ${img}
 #xdg-open http://localhost/WeatherForecast

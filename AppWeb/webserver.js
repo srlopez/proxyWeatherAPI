@@ -15,7 +15,7 @@ const server = http.createServer((req, res) => {
     hostname : <strong>${hostname}</strong> ${time}<br>
     webserver: <strong>http://${host}:${port}</strong><br>
     apiserver: <strong>${api}</strong><br>
-    <button id='btn' title='API'>Call API</button><hr>
+    <button id='btn' title='API'>fetch API</button><hr>
     </div>
     <ul id='lista'></ul>
     <style>* { font-size: xx-large; font-family: monospace; } </style>
